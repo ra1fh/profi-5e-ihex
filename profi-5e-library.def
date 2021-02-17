@@ -1,0 +1,16 @@
+;;; -*- mode: asm -*-
+;;; 
+;;; Profi 5E Library Functions
+;;;
+
+DUNKL	equ	00380H
+T270	equ 002EFH
+TEMAS   equ 007CCH
+TEXT8   equ 00360H
+TEXT1   equ 003E0H
+ZSECH   equ 00303H
+SECH	equ	00313H
+ATEXT   equ 005F4H
+ASCII	equ 004F1H
+MODE	equ 00EC3H
+BAUD	equ 0056BH	

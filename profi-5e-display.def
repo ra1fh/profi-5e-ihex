@@ -1,0 +1,55 @@
+;;; -*- mode: asm -*-
+;;; 
+;;; Profi 5E 7 Segment Display Character Definitions
+;;;
+
+DIS_S1	equ	087F8H
+DIS_S2	equ 087F9H
+DIS_S3	equ 087FAH
+DIS_S4	equ 087FBH
+DIS_S5	equ 087FCH
+DIS_S6	equ 087FDH
+DIS_S7	equ 087FEH
+DIS_S8	equ 087FFH
+
+DIS_1	equ	006H
+DIS_2	equ	05BH
+DIS_3	equ	04FH
+DIS_4	equ	066H
+DIS_5	equ	06Dh
+DIS_6	equ	07Dh
+DIS_7	equ	007H
+DIS_8	equ	07Fh
+DIS_9	equ	06FH
+DIS_0	equ	03FH
+DIS_A	equ	077H
+DIS_B	equ	07CH
+DIS_C	equ	039H
+DIS_D	equ	05EH
+DIS_E	equ	079H
+DIS_F	equ	071H
+DIS_G	equ	03DH
+DIS_H	equ	074H
+DIS_I	equ	019H
+;;; 	DIS_J	equ	0
+;;;	DIS_K	equ	0
+DIS_L	equ	038H
+;;; 	DIS_M	equ	0
+DIS_N	equ	054H
+DIS_O	equ	05CH
+DIS_P	equ	073H
+;;;	DIS_Q	equ	0
+DIS_R	equ	050H
+DIS_S	equ	06DH
+DIS_T	equ	078H
+DIS_U	equ	01CH
+;;;	DIS_V	equ	0
+;;;	DIS_W	equ	0
+;;;	DIS_X	equ	0
+;;;	DIS_Y	equ	0
+;;;	DIS_Z	equ	0
+DIS_DOT	equ	080H
+
+
+DIS_EQU equ 048H
+DIS_MIN equ 040H
