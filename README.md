@@ -1,19 +1,17 @@
 
-Profi 5E IHEX reader
+Profi 5E IHEX loader
 ====================
 
-IHEX reader that can be embedded into the Profi 5E monitor ROM. The
+IHEX loader that can be embedded into the Profi 5E monitor ROM. The
 original ROM has to be supplied as profi-5e-monitor.bin.
 
-### Building
-
-Build Requirement:
+### Build Dependencies
 
  * [python-intelhex](https://pypi.org/project/intelhex/)
  * [AS macroassembler](http://john.ccac.rwth-aachen.de:8000/as/)
  * profi-5e-monitor.bin
 
-Building:
+### Building
 
     make
 	make embed
