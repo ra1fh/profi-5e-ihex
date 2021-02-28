@@ -2,14 +2,16 @@
 Profi 5E IHEX loader
 ====================
 
-IHEX loader that can be embedded into the Profi 5E monitor ROM. The
-original ROM has to be supplied as profi-5e-monitor.bin.
+IHEX loader that can be embedded into the
+[https://de.wikipedia.org/wiki/PROFI-5-Mikrocomputerfamilie](Profi 5E)
+monitor ROM. The Profi 5E is an 8085 based computer primarily used in
+education.
 
 ### Build Dependencies
 
  * [python-intelhex](https://pypi.org/project/intelhex/)
  * [AS macroassembler](http://john.ccac.rwth-aachen.de:8000/as/)
- * profi-5e-monitor.bin
+ * The original ROM has to be supplied as profi-5e-monitor.bin
 
 ### Building
 
