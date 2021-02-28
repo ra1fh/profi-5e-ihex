@@ -3,7 +3,7 @@ Profi 5E IHEX loader
 ====================
 
 IHEX loader that can be embedded into the
-[https://de.wikipedia.org/wiki/PROFI-5-Mikrocomputerfamilie](Profi 5E)
+[Profi 5E](https://de.wikipedia.org/wiki/PROFI-5-Mikrocomputerfamilie)
 monitor ROM. The Profi 5E is an 8085 based computer primarily used in
 education.
 
