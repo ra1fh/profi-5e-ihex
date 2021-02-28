@@ -176,15 +176,9 @@ hexcnv:
 	stc
 	ret
 
-
-pstart:
-	push b
-	lxi b, tstart
-	call TEXT8
-	pop b
-	ret
-tstart:
-	db	DIS_S, DIS_E, DIS_R, 00h, DIS_3, DIS_0, DIS_0, DIS_B
+;;;
+;;; Print status to display
+;;;
 
 pend:
 	push b
