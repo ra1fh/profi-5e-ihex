@@ -21,15 +21,17 @@ education.
 ### Usage
 
 To start the ihex loader, press F-E and then G to start. The display
-shows "loader 1". The number on the right indicates the stage the
-parser is in and will change during the transfer.
+shows "_ lAdE _". The symbols left and right will show a load
+animation during transmission.
 
-After the transfer completed successfully, the display shows "load
-end". If the was an error during transfer, the display shows "load
-err". When neither of those is shown, there might have been an
+After the transfer completed successfully, the display shows
+"EndE". If there was an error during transfer, the display would show
+"FEHLEr". When neither of those is shown, there might have been an
 internal error.
+
+The first address of the ihex file will be stored such that the B-key
+entry form is pre-populated with that address for easy starting.
 
 The transfer speed setting is done as explained in the Profi-5E
 documentation via the micro switches. On my system, transfer speeds
 up to 1200 bit/s do work reliably.
-
