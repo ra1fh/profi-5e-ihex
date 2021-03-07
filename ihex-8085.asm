@@ -140,22 +140,22 @@ hexload:
 ;;; Example: 3F
 ;;; Result: A, Carry on error
 ;;;
+;;; Clobbers register c in order to be able to use rc
+;;;
 rxbyte:
-	push b
 	call ASCII
- 	call hexcnv
+	call hexcnv
 	rc					; return on conversion error
- 	rlc
- 	rlc
- 	rlc
- 	rlc
- 	mov b, a
+	rlc
+	rlc
+	rlc
+	rlc
+	mov c, a
 	call ASCII
- 	call hexcnv
- 	ora b
-	pop b
-	ret
+	call hexcnv
 	rc					; return on conversion error
+	ora c
+	retok
 
 ;;;
 ;;; Convert ASCII encoded HEX digit in A to value
