@@ -18,7 +18,11 @@
 ;;; Profi-5E monitor ROM at 0x0fa8
 
 			title	"Intel-HEX Reader"
-			org		0fa8h
+	IFDEF	EMBED
+	org	00fa8h
+	ELSE
+	org	02000h
+	ENDIF
 
 	include	"profi-5e-library.def"
 	include	"profi-5e-display.def"
