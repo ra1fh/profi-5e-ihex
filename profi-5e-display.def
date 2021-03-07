@@ -3,14 +3,23 @@
 ;;; Profi 5E 7 Segment Display Character Definitions
 ;;;
 
-DIS_S1	equ	087F8H
-DIS_S2	equ 087F9H
-DIS_S3	equ 087FAH
-DIS_S4	equ 087FBH
-DIS_S5	equ 087FCH
-DIS_S6	equ 087FDH
-DIS_S7	equ 087FEH
-DIS_S8	equ 087FFH
+DIS_C1	equ	087F8H
+DIS_C2	equ	087F9H
+DIS_C3	equ	087FAH
+DIS_C4	equ	087FBH
+DIS_C5	equ	087FCH
+DIS_C6	equ	087FDH
+DIS_C7	equ	087FEH
+DIS_C8	equ	087FFH
+
+DIS_SA	equ	001h
+DIS_SB	equ	002h
+DIS_SC	equ	004h
+DIS_SD	equ	008h
+DIS_SE	equ	010h
+DIS_SF	equ	020h
+DIS_SG	equ	040h
+DIS_DP	equ	080h
 
 DIS_1	equ	006H
 DIS_2	equ	05BH
@@ -31,25 +40,25 @@ DIS_F	equ	071H
 DIS_G	equ	03DH
 DIS_H	equ	074H
 DIS_I	equ	019H
-;;; 	DIS_J	equ	0
-;;;	DIS_K	equ	0
+;;; J
+;;; K
 DIS_L	equ	038H
-;;; 	DIS_M	equ	0
+;;; M
 DIS_N	equ	054H
 DIS_O	equ	05CH
 DIS_P	equ	073H
-;;;	DIS_Q	equ	0
+;;; Q
 DIS_R	equ	050H
 DIS_S	equ	06DH
 DIS_T	equ	078H
 DIS_U	equ	01CH
-;;;	DIS_V	equ	0
-;;;	DIS_W	equ	0
-;;;	DIS_X	equ	0
-;;;	DIS_Y	equ	0
-;;;	DIS_Z	equ	0
+;;; V
+;;; W
+;;; X
+;;; Y
+;;; Z
 DIS_DOT	equ	080H
 
 
-DIS_EQU equ 048H
-DIS_MIN equ 040H
+DIS_EQU	equ	048H
+DIS_MIN	equ	040H
