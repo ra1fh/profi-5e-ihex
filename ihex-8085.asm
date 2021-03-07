@@ -17,7 +17,7 @@
 ;;; IHEX reader that can be installed into a unused location of the
 ;;; Profi-5E monitor ROM at 0x0fa8
 
-			title	"Intel-HEX Reader"
+	title	"Intel-HEX Reader"
 	IFDEF	EMBED
 	org	00fa8h
 	ELSE
@@ -63,33 +63,39 @@ main:
 ;;;   L  - Length
 ;;;
 hexload:
+	call pstart
 .linestart:
 	;;   START OF RECORD
-	call pstat1
+	mvi  a, DIS_SD
+	sta  DIS_C8
 	call ASCII
 	cpi  ':'
 	jnz  .linestart				; wait for start of record (':')
 	;;   LENGTH
-	call pstat2
+	mvi  a, DIS_SE
+	sta  DIS_C8
 	call rxbyte
 	rc					; return on error
 	mov  l, a				; length
 	mov  h, a				; init checksum
 	;;   ADDRESS
-	call pstat3
+	mvi  a, DIS_SF
+	sta  DIS_C8
 	call rxbyte
-	call pstat4
 	rc					; return on error
 	mov  d, a				; destination byte 1
 	add  h					; update checksum
 	mov  h, a				; move to checksum register
+	mvi  a, DIS_SA
+	sta  DIS_C8
 	call rxbyte
 	rc					; return on error
 	mov  e, a				; destination byte 2
 	add  h					; update checksum
 	mov  h, a				; move to checksum register
 	;;   TYPE
-	call pstat5
+	mvi  a, DIS_SB
+	sta  DIS_C8
 	call rxbyte
 	rc					; return on error
 	mov  b, a				; record type
@@ -106,7 +112,8 @@ hexload:
 	jz   .checksum				; jump to checksum validation
 .nextbyte:
 	;;   DATA
-	call pstat6
+	mvi  a, DIS_SC
+	sta  DIS_C8
 	call rxbyte
 	rc					; return on error
 	stax d
@@ -121,7 +128,8 @@ hexload:
 	cma
 	inr  a
 	mov  h, a
-	call pstat7
+	mvi  a, DIS_SD | DIS_DP
+	sta  DIS_C8
 	call rxbyte
 	rc					; return on error
 	cmp  h
@@ -190,85 +198,31 @@ hexcnv:
 ;;; Print status to display
 ;;;
 
+pstart:
+	push b
+	lxi  b, tstart
+	call TEXT8
+	pop  b
+	ret
+tstart:
+	db   DIS_L, DIS_O, DIS_A, DIS_D, DIS_E, DIS_R, 00, DIS_D
+
 pend:
 	push b
-	lxi b, tend
+	lxi  b, tend
 	call TEXT8
-	pop b
+	pop  b
 	ret
 tend:
-	db	DIS_L, DIS_O, DIS_A, DIS_D, 00h, DIS_E, DIS_N, DIS_D
+	db   DIS_L, DIS_O, DIS_A, DIS_D, 00h, DIS_E, DIS_N, DIS_D
 
 perr:
 	push b
-	lxi b, terr
+	lxi  b, terr
 	call TEXT8
-	pop b
+	pop  b
 	ret
 terr:
-	db	DIS_L, DIS_O, DIS_A, DIS_D, 00h, DIS_E, DIS_R, DIS_R
+	db   DIS_L, DIS_O, DIS_A, DIS_D, 00h, DIS_E, DIS_R, DIS_R
 
-pstat1:
-	push b
-	lxi	 b, tstat1
-	call TEXT8
-	pop b
-	ret
-tstat1:
-	db	DIS_L, DIS_O, DIS_A, DIS_D, DIS_E, DIS_R, 00, DIS_1
 
-pstat2:
-	push b
-	lxi	 b, tstat2
-	call TEXT8
-	pop b
-	ret
-tstat2:
-	db	DIS_L, DIS_O, DIS_A, DIS_D, DIS_E, DIS_R, 00, DIS_2
-
-pstat3:
-	push b
-	lxi	 b, tstat3
-	call TEXT8
-	pop b
-	ret
-tstat3:
-	db	DIS_L, DIS_O, DIS_A, DIS_D, DIS_E, DIS_R, 00, DIS_3
-
-pstat4:
-	push b
-	lxi	 b, tstat4
-	call TEXT8
-	pop b
-	ret
-tstat4:
-	db	DIS_L, DIS_O, DIS_A, DIS_D, DIS_E, DIS_R, 00, DIS_4
-
-pstat5:
-	push b
-	lxi	 b, tstat5
-	call TEXT8
-	pop b
-	ret
-tstat5:
-	db	DIS_L, DIS_O, DIS_A, DIS_D, DIS_E, DIS_R, 00, DIS_5
-
-pstat6:
-	push b
-	lxi	 b, tstat6
-	call TEXT8
-	pop b
-	ret
-tstat6:
-	db	DIS_L, DIS_O, DIS_A, DIS_D, DIS_E, DIS_R, 00, DIS_6
-
-pstat7:
-	push b
-	lxi	 b, tstat7
-	call TEXT8
-	pop b
-	ret
-tstat7:
-	db	DIS_L, DIS_O, DIS_A, DIS_D, DIS_E, DIS_R, 00, DIS_7
-
-	END
