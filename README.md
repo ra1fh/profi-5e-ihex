@@ -21,7 +21,7 @@ education.
 ### Usage
 
 To start the ihex loader, press F-E and then G to start. The display
-shows "_ lAdE _". The symbols left and right will show a load
+shows "_ LADE _". The symbols left and right will show a load
 animation during transmission.
 
 After the transfer completed successfully, the display shows
@@ -29,9 +29,10 @@ After the transfer completed successfully, the display shows
 "FEHLEr". When neither of those is shown, there might have been an
 internal error.
 
-The first address of the ihex file will be stored such that the B-key
-entry form is pre-populated with that address for easy starting.
+The first address of the ihex file will be stored to monitor ROM
+memory so that the G or E key will start without the need to setup
+the start address manually.
 
-The transfer speed setting is done as explained in the Profi-5E
-documentation via the micro switches. On my system, transfer speeds
-up to 1200 bit/s do work reliably.
+The transfer speed of the serial port can be configured via micro
+switches as documented in the Profi-5E documentation. On my system,
+transfer speeds up to 1200 bit/s do work reliably.

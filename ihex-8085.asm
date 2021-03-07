@@ -114,9 +114,9 @@ hexload:
 	jz   .skipaddr		; address has been stored already
 	mvi  c, 00h
 	mov  a, e
-	sta  087e0h
-	mov  a, d
-	sta  087e1h
+	sta  087e0h		; store start address to monitor ROM
+	mov  a, d		; memory cells so that G or E key
+	sta  087e1h		; will work right away
 .skipaddr:
 	;;   TYPE
 	call rxbyte
