@@ -90,25 +90,25 @@ hexload:
 	;;   START OF RECORD
 	call ASCII
 	cpi  ':'
-	jnz  .linestart				; wait for start of record (':')
+	jnz  .linestart		; wait for start of record (':')
 	;;   LENGTH
 	call pprog
 	call rxbyte
-	rc					; return on error
-	mov  l, a				; length
-	mov  h, a				; init checksum
+	rc			; return on error
+	mov  l, a		; length
+	mov  h, a		; init checksum
 	;;   ADDRESS
 	call rxbyte
-	rc					; return on error
-	mov  d, a				; destination byte 1
-	add  h					; update checksum
-	mov  h, a				; move to checksum register
+	rc			; return on error
+	mov  d, a		; destination byte 1
+	add  h			; update checksum
+	mov  h, a		; move to checksum register
 	call rxbyte
-	rc					; return on error
-	mov  e, a				; destination byte 2
-	add  h					; update checksum
-	mov  h, a				; move to checksum register
-	;;   store first address for auto-start
+	rc			; return on error
+	mov  e, a		; destination byte 2
+	add  h			; update checksum
+	mov  h, a		; move to checksum register
+	;;   store address
 	sub  a
 	ora  c
 	jz   .skipaddr		; address has been stored already
@@ -120,29 +120,29 @@ hexload:
 .skipaddr:
 	;;   TYPE
 	call rxbyte
-	rc					; return on error
-	mov  b, a				; record type
+	rc			; return on error
+	mov  b, a		; record type
 	add  h
 	mov  h, a
 	mov  a, b
-	cpi  00h				; record 0 => read bytes
+	cpi  00h		; record 0 => read bytes
 	jz   .loaddata
-	cpi  01h				; record 1 => checksum
+	cpi  01h		; record 1 => checksum
 	jz   .checksum
-	jmp  .err				; unkown record type => error
+	jmp  .err		; unkown record type => error
 .loaddata:
 	call pprog
 .nextbyte:
 	;;   DATA
 	mov  a, l
 	call rxbyte
-	rc					; return on error
+	rc			; return on error
 	stax d
 	inx  d
-	add  h					; update checksum
+	add  h			; update checksum
 	mov  h, a
 	dcr  l
-	jnz  .nextbyte			; next byte of len > 0
+	jnz  .nextbyte		; next byte of len > 0
 .checksum:
 	;;   CHECKSUM
 	mov  a, h
@@ -150,7 +150,7 @@ hexload:
 	inr  a
 	mov  h, a
 	call rxbyte
-	rc					; return on error
+	rc			; return on error
 	cmp  h
 	jnz  .err
 	mov  a, b
@@ -170,7 +170,7 @@ rxbyte:
 	push b
 	call ASCII
 	call hexcnv
-	jc   .err				; return on conversion error
+	jc   .err		; return on conversion error
 	rlc
 	rlc
 	rlc
@@ -178,7 +178,7 @@ rxbyte:
 	mov  b, a
 	call ASCII
 	call hexcnv
-	jc   .err				; return on conversion error
+	jc   .err		; return on conversion error
 	ora  b
 	pop  b
 	retok
@@ -193,16 +193,16 @@ rxbyte:
 ;;;
 hexcnv:
 	cpi '0'
-	jc  .err				; error when <= '0'
+	jc  .err		; error when <= '0'
 	cpi '9' + 1
-	jnc .alphaupper				; continue with alpha when > '9'
+	jnc .alphaupper		; continue with alpha when > '9'
 	sui '0'
 	retok
 .alphaupper:
 	cpi 'A'
-	jc  .err				; error when <= 'A'
+	jc  .err		; error when <= 'A'
 	cpi 'F' + 1
-	jnc .alphalower				; continue with lower alpha when > 'F'
+	jnc .alphalower		; continue with lower alpha when > 'F'
 	sui 'A' - 10
 	retok
 .alphalower:
