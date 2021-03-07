@@ -37,6 +37,9 @@
 	org	02000H
 	ENDIF
 
+;;;
+;;; Return with carry flag clear as success indicator
+;;;
 retok	MACRO
 	stc
 	cmc
@@ -44,68 +47,78 @@ retok	MACRO
 	ENDM
 
 ;;;
+;;; Return with carry flag set as error indicator
+;;;
+reterr	MACRO
+	stc
+	ret
+	ENDM
+
+;;;
 ;;; Entry Point
 ;;;
 main:
-	call BAUD
-	call hexload
+	call BAUD		; call system function to set serial timers
+	call hexload		; call main function to load ihex
 	jc   .err
-	call pend
-	hlt
+	jmp  ENDE
 .err:
-	call perr
-	hlt
+	call FEHLN
+	jmp  MLOOP
 
 ;;;
 ;;; Read Intel-HEX from serial port and write to memory
 ;;; Example:
-;;;           len(2) addr(4) type(2) data(n) checksum(2)
-;;;           :048000001234567868
-;;; 	      :00000001FF
+;;;          len(2) addr(4) type(2) data(n)  checksum(2)
+;;;          :04    8000    00      12345678 68
+;;;          :00    0000    01               FF
 ;;; Type:
 ;;;   00 - Data
 ;;;   01 - End
 ;;;
 ;;; Registers:
 ;;;   B  - Record Type
+;;;   C  - Flag for storing start address
 ;;;   DE - Destination
 ;;;   H  - Checksum
 ;;;   L  - Length
 ;;;
 hexload:
-	call pstart
+	call pload
+	mvi  c, 01h
 .linestart:
 	;;   START OF RECORD
-	mvi  a, DIS_SD
-	sta  DIS_C8
 	call ASCII
 	cpi  ':'
 	jnz  .linestart				; wait for start of record (':')
 	;;   LENGTH
-	mvi  a, DIS_SE
-	sta  DIS_C8
+	call pprog
 	call rxbyte
 	rc					; return on error
 	mov  l, a				; length
 	mov  h, a				; init checksum
 	;;   ADDRESS
-	mvi  a, DIS_SF
-	sta  DIS_C8
 	call rxbyte
 	rc					; return on error
 	mov  d, a				; destination byte 1
 	add  h					; update checksum
 	mov  h, a				; move to checksum register
-	mvi  a, DIS_SA
-	sta  DIS_C8
 	call rxbyte
 	rc					; return on error
 	mov  e, a				; destination byte 2
 	add  h					; update checksum
 	mov  h, a				; move to checksum register
+	;;   store first address for auto-start
+	sub  a
+	ora  c
+	jz   .skipaddr		; address has been stored already
+	mvi  c, 00h
+	mov  a, e
+	sta  087e0h
+	mov  a, d
+	sta  087e1h
+.skipaddr:
 	;;   TYPE
-	mvi  a, DIS_SB
-	sta  DIS_C8
 	call rxbyte
 	rc					; return on error
 	mov  b, a				; record type
@@ -113,17 +126,15 @@ hexload:
 	mov  h, a
 	mov  a, b
 	cpi  00h				; record 0 => read bytes
-	jz   .nextbyte
+	jz   .loaddata
 	cpi  01h				; record 1 => checksum
 	jz   .checksum
 	jmp  .err				; unkown record type => error
-	mov  a, l
-	cpi  00h				; in case record length is 0
-	jz   .checksum				; jump to checksum validation
+.loaddata:
+	call pprog
 .nextbyte:
 	;;   DATA
-	mvi  a, DIS_SC
-	sta  DIS_C8
+	mov  a, l
 	call rxbyte
 	rc					; return on error
 	stax d
@@ -131,15 +142,13 @@ hexload:
 	add  h					; update checksum
 	mov  h, a
 	dcr  l
-	jnz  .nextbyte				; next byte of len > 0
+	jnz  .nextbyte			; next byte of len > 0
 .checksum:
 	;;   CHECKSUM
 	mov  a, h
 	cma
 	inr  a
 	mov  h, a
-	mvi  a, DIS_SD | DIS_DP
-	sta  DIS_C8
 	call rxbyte
 	rc					; return on error
 	cmp  h
@@ -149,8 +158,7 @@ hexload:
 	jnz  .linestart
 	retok
 .err:
-	stc
-	ret
+	reterr
 
 ;;;
 ;;; Read an ASCII encoded byte from serial (two characters)
@@ -158,22 +166,26 @@ hexload:
 ;;; Example: 3F
 ;;; Result: A, Carry on error
 ;;;
-;;; Clobbers register c in order to be able to use rc
-;;;
 rxbyte:
+	push b
 	call ASCII
 	call hexcnv
-	rc					; return on conversion error
+	jc   .err				; return on conversion error
 	rlc
 	rlc
 	rlc
 	rlc
-	mov c, a
+	mov  b, a
 	call ASCII
 	call hexcnv
-	rc					; return on conversion error
-	ora c
+	jc   .err				; return on conversion error
+	ora  b
+	pop  b
 	retok
+.err:
+	pop  b
+	reterr
+
 
 ;;;
 ;;; Convert ASCII encoded HEX digit in A to value
@@ -201,38 +213,43 @@ hexcnv:
 	sui 'a' - 10
 	retok
 .err:
-	stc
+	reterr
+
+;;;
+;;; Print progress animation
+;;;
+pprog:
+	lda  DIS_C8
+.next1:	cpi  DIS_SD
+	jnz  .next2
+	mvi  a, DIS_SE
+	sta  DIS_C8
+	sta  DIS_C1
+	ret
+.next2: cpi  DIS_SE
+	jnz  .next3
+	mvi  a, DIS_SG
+	sta  DIS_C8
+	sta  DIS_C1
+	ret
+.next3:	cpi  DIS_SG
+	jnz  .next4
+	mvi  a, DIS_SC
+	sta  DIS_C8
+	sta  DIS_C1
+	ret
+.next4: mvi  a, DIS_SD
+	sta  DIS_C8
+	sta  DIS_C1
 	ret
 
 ;;;
-;;; Print status to display
+;;; Print text "_ LadE _"
 ;;;
-
-pstart:
-	push b
-	lxi  b, tstart
+pload:	push b
+	lxi  b, ploads
 	call TEXT8
 	pop  b
 	ret
-tstart:
-	db   DIS_L, DIS_O, DIS_A, DIS_D, DIS_E, DIS_R, 00, DIS_D
-
-pend:
-	push b
-	lxi  b, tend
-	call TEXT8
-	pop  b
-	ret
-tend:
-	db   DIS_L, DIS_O, DIS_A, DIS_D, 00h, DIS_E, DIS_N, DIS_D
-
-perr:
-	push b
-	lxi  b, terr
-	call TEXT8
-	pop  b
-	ret
-terr:
-	db   DIS_L, DIS_O, DIS_A, DIS_D, 00h, DIS_E, DIS_R, DIS_R
-
-
+ploads:
+	db   DIS_SD, 0, DIS_L, DIS_A, DIS_D, DIS_E, 0, DIS_SD
