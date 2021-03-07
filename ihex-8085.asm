@@ -15,17 +15,27 @@
 ;;;
 
 ;;; IHEX reader that can be installed into a unused location of the
-;;; Profi-5E monitor ROM at 0x0fa8
+;;; Profi-5E monitor ROM at 0x0fa8 or to 0x2000 for testing
 
 	title	"Intel-HEX Reader"
-	IFDEF	EMBED
-	org	00fa8h
-	ELSE
-	org	02000h
-	ENDIF
 
 	include	"profi-5e-library.def"
 	include	"profi-5e-display.def"
+
+	IFDEF	EMBED
+	;; 	Patch F-0 to point to 0x2000 for testing
+	org	0027CH
+	dw	02000H
+	;;	Patch F-E to point to start address
+	org	00298H
+	dw	00FA8H
+	;; 	Code starts at 0x0FA8
+	org	00FA8H
+	ELSE
+	;;	For testing set start address to second ROM,
+	;; 	reachable with patched monitor ROM via F-0
+	org	02000H
+	ENDIF
 
 retok	MACRO
 	stc
