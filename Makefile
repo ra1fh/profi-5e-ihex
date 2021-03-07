@@ -15,7 +15,7 @@ MONITORROM = profi-5e-monitor
 #
 IHEXROM = profi-5e-ihex
 
-default: $(PRJ).hex $(PRJ).bin
+default: $(PRJ)-2000.hex $(PRJ)-2000.bin
 
 $(PRJ)-0000.hex: $(PRJ)-0000.p
 	p2hex $(PRJ)-0000.p
