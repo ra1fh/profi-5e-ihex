@@ -12,6 +12,7 @@ DIS_C6	equ	087FDH
 DIS_C7	equ	087FEH
 DIS_C8	equ	087FFH
 
+;;; Individual segments
 DIS_SA	equ	001h
 DIS_SB	equ	002h
 DIS_SC	equ	004h
@@ -21,6 +22,7 @@ DIS_SF	equ	020h
 DIS_SG	equ	040h
 DIS_DP	equ	080h
 
+;;; Characters
 DIS_1	equ	006H
 DIS_2	equ	05BH
 DIS_3	equ	04FH
