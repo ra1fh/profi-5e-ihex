@@ -1,8 +1,22 @@
 ;;; -*- mode: asm -*-
-;;; 
-;;; Profi 5E 7 Segment Display Character Definitions
 ;;;
+;;; Copyright (c) 2021 Ralf Horstmann <ralf@ackstorm.de>
+;;;
+;;; Permission to use, copy, modify, and distribute this software for any
+;;; purpose with or without fee is hereby granted, provided that the above
+;;; copyright notice and this permission notice appear in all copies.
+;;;
+;;; THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+;;; WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+;;; MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+;;; ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+;;; WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+;;; ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+;;; OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+;;; Profi 5E 7 Segment Display  Definitions
+
+;;; Memory locations
 DIS_C1	equ	087F8H
 DIS_C2	equ	087F9H
 DIS_C3	equ	087FAH
